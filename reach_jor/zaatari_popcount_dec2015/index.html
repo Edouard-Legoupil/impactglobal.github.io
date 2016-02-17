@@ -80,10 +80,10 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">JORDAN - Al Zaatari Refugee Camp population count - December 2015     </a>
+      <a class="navbar-brand" href="#">JORDAN - Al Zaatari Refugee Camp Population Count - December 2015     </a>
     </div>
 	<div id="count-info" data-step="1" data-position="right" > 
-				<h6 style="color: white"><strong>71,227</strong></span> total refugees in Al Za'atari Camp</strong></h6>
+				<h6 style="color: white"><strong>71,227</strong></span> total refugees recorded in Al Za'atari Camp</strong></h6>
 				<h6 style="color: white"><strong><span class="filter-count"></span></strong> refugees filtered </h6>
 	</div>
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -749,9 +749,9 @@
 <div class="box" id="content" style="color:white">
 		<h4 style="margin-bottom:25px,margin-top:100px"><strong>About Al Za'atari Camp population count</strong></h4>
 		<h5> </h5>
-		<h5><strong>REACH conducted this population count of Za’atari refugee camp in partnership with UNICEF between 14 - 23 December 2015.</strong></h5>
-		<h5>REACH has conducted several population counts within Za’atari Camp since its inception in July 2012. Although UNHCR registration data is available for the whole camp, these counts provide further information in the form of population per district and per street/block, (data can be be downloaded from this page)</h5>
-		<h5>As Za’atari camp is an evolving context in which residents move within the camp, into and out of the camp from the host community, and leave the camp permanently on an on-going basis.</h5>
+		<h5><strong>REACH conducted this population count of Za’atari refugee camp in partnership with UNICEF between 13 - 23 December 2015.</strong></h5>
+		<h5>REACH has conducted 6 population counts within Za’atari Camp since its inception in July 2012. Although UNHCR registration data is available for the whole camp, these counts provide further information in the form of population per district and per street/block, (data can be be downloaded from this page)</h5>
+		<h5>As Za’atari camp is an evolving context in which residents move within the camp, into and out of the camp to the host community on a largely temporary basis, and leave the camp permanently on an on-going basis.</h5>
 		<h5>Regular counts are therefore necessary for humanitarian actors within the camp, as this facilitates the planning and implementation of the distribution and delivery of goods and services for the community.</h5>	
 </div>
 
@@ -912,6 +912,7 @@ var   ndx                	= crossfilter(experiments);
 			else if(d.key == "No toilet") return 2;
 			else if(d.key == "Concrete") return 1;
 			})
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
 		  .colors(['#9ecae1'])
           .colorDomain([0,0])
@@ -933,6 +934,7 @@ var   ndx                	= crossfilter(experiments);
 			else if(d.key == "Sewage network") return 2;
 			else if(d.key == "No connection") return 1;
 			})
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
 		  .colors(['#9ecae1'])
           .colorDomain([0,0])
@@ -948,6 +950,11 @@ var   ndx                	= crossfilter(experiments);
 		  .elasticX(true)
           .dimension(toiletDimension)
           .group(toiletGroup)
+		  .ordering(function(d) {
+			if(d.key == "No") return 2;
+			else if(d.key == "Yes") return 1;
+			})
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
 		  .colors(['#9ecae1'])
           .colorDomain([0,0])
@@ -983,6 +990,7 @@ var   ndx                	= crossfilter(experiments);
          //.stack(governoratesByHousehold)
           .elasticX(true)
           .renderLabel(true)
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
           .colors(['#9ecae1'])
           .colorDomain([0,0])
@@ -995,6 +1003,7 @@ var   ndx                	= crossfilter(experiments);
 		   .data(function(group) {
 			return group.all().filter(function(kv) { return kv.key !=""; });
 			})
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
 		  .elasticX(true)
           .renderLabel(true)
@@ -1009,6 +1018,7 @@ var   ndx                	= crossfilter(experiments);
 		   .data(function(group) {
 			return group.all().filter(function(kv) { return kv.key !=""; });
 			})
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
 		  .elasticX(true)
           .renderLabel(true)
@@ -1022,6 +1032,7 @@ var   ndx                	= crossfilter(experiments);
           .group(healthGroup)
           .elasticX(true)
           .renderLabel(true)
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
           .colors(['#86BF88'])
           .colorDomain([0,0])
@@ -1033,6 +1044,7 @@ var   ndx                	= crossfilter(experiments);
           .group(disabilityGroup)
           .elasticX(true)
           .renderLabel(true)
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
           .colors(['#86BF88'])
           .colorDomain([0,0])
@@ -1079,6 +1091,7 @@ var   ndx                	= crossfilter(experiments);
           .ordering(function (p) { return -p.value;})
           .dimension(ShelterDim)
           .group(ShelterGroup)
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
 		  .colors(['#FFF56D'])
           .colorDomain([0,0])
@@ -1110,6 +1123,7 @@ var   ndx                	= crossfilter(experiments);
                     })
 		  .elasticX(true)
           .ordering(function (p) { return -p.value;})
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
 		  .colors(['#E8D186'])
           .colorDomain([0,0])
