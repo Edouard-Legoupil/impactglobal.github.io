@@ -697,7 +697,7 @@
 							</svg>
 
 			</div>
-		<div class="col-md-6" id ="date"class="line-chart-date"style="margin-top:25px"><h5>Date of Arrival in Zaatari Camp (select the graph area to filter by date)</h5></div>
+		<div class="col-md-6" id ="date"class="line-chart-date"style="margin-top:25px"><h5>Date of Arrival in Al Zaatari Camp (select the graph area to filter by date)</h5></div>
 	  </div>
 	  <div class="row">
 	  <div class="col-md-3">
@@ -730,14 +730,14 @@
 	  </div>
 	  <div class="col-md-3">
 		<div id ="wash_charts"><h3>WASH</h3></div>
-		<div id="toilet"class="dc-chart"><h5>Household has private toilet</h5></div>
-		<div id="toiletfloor"class="dc-chart"><h5>Toilet floor material</h5></div>
-		<div id="toiletconnect"class="dc-chart"><h5>Type of toilet connection</h5></div>
+		<div id="toilet"class="dc-chart"><h5>Residents in household with private toilet</h5></div>
+		<div id="toiletfloor"class="dc-chart"><h5>Toilet floor material (by # of residents)</h5></div>
+		<div id="toiletconnect"class="dc-chart"><h5>Type of toilet connection (by # of residents)</h5></div>
 		<div id="wc"class="dc-chart"><h5>Distance to closest active WASH Centre</h5></div>
 	  </div>
 	  <div class="col-md-3">
 		<div id ="education_charts"><h3>Education</h3></div>
-		<div id="enrollment"class="dc-chart"><h5>School-aged children, per household, not enrolled in formal education</h5></div>
+		<div id="enrollment"class="dc-chart"><h5>Number of children per household not enrolled in formal education</h5></div>
 		<div id="school"class="dc-chart"><h5>Distance to the closest School - School aged children only</h5></div>
 		<div id="education_charts"><h3>Health & Disabilities</h3></div>
 		<div id="disability"class="dc-chart"><h5>Disabled persons per household</h5></div>
@@ -829,7 +829,7 @@ var   ndx                	= crossfilter(experiments);
 	  FemaleDim	         	= ndx.dimension(function(d) {return d.female;});
       FemaleGroup        	= FemaleDim.group().reduceCount();
 	  EnrollmentDim		 	= ndx.dimension(function(d) {return d.total_not_enrolled;});
-	  EnrollmentGroup	 	= EnrollmentDim.group().reduceSum(function(d) {return d.hh_size});
+	  EnrollmentGroup	 	= EnrollmentDim.group().reduceCount();
 	  ShelterDim         	= ndx.dimension(function(d) {return d.shelter;});
       ShelterGroup       	= ShelterDim.group().reduceSum(function(d) {return d.hh_size});
       dateDimension      	= ndx.dimension(function(d) {return d.dd;});
@@ -841,7 +841,7 @@ var   ndx                	= crossfilter(experiments);
 	  healthDimension    	= ndx.dimension(function(d) {return d.health;});
       healthGroup        	= healthDimension.group().reduceSum(function(d) {return d.hh_size});
 	  disabilityDim		 	= ndx.dimension(function(d) {return d.numbers_disabled;});
-	  disabilityGroup	 	= disabilityDim.group().reduceSum(function(d) {return d.hh_size});
+	  disabilityGroup	 	= disabilityDim.group().reduceCount();
 	  toiletDimension	 	= ndx.dimension(function(d) {return d.toilet;});
       toiletGroup        	= toiletDimension.group().reduceSum(function(d) {return d.hh_size});
 	  toiletconnectDimension = ndx.dimension(function(d) {if (d.toilet_connection !== "No toilet") return d.toilet_connection;});
@@ -893,7 +893,7 @@ var   ndx                	= crossfilter(experiments);
  
  toiletfloorChart
           .width(250)
-          .height(230)
+          .height(236)
           //.slicesCap(7)
           //.colors(['#9ecae1'])
           //.colorDomain([0,0])
@@ -910,7 +910,7 @@ var   ndx                	= crossfilter(experiments);
 			else if(d.key == "No toilet") return 2;
 			else if(d.key == "Concrete") return 1;
 			})
-		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(1) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
 		  .colors(['#9ecae1'])
           .colorDomain([0,0])
@@ -919,7 +919,7 @@ var   ndx                	= crossfilter(experiments);
 
  toiletconnectChart
           .width(250)
-          .height(155)
+          .height(157)
           //.slicesCap(7)
           //.colors(['#9ecae1'])
           //.colorDomain([0,0])
@@ -932,7 +932,7 @@ var   ndx                	= crossfilter(experiments);
 			else if(d.key == "Sewage network") return 2;
 			else if(d.key == "No connection") return 1;
 			})
-		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(1) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
 		  .colors(['#9ecae1'])
           .colorDomain([0,0])
@@ -998,9 +998,6 @@ var   ndx                	= crossfilter(experiments);
    schoolChart.width(250).height(140)
           .dimension(schoolDimension)
           .group(schoolGroup)
-		   .data(function(group) {
-			return group.all().filter(function(kv) { return kv.key !=""; });
-			})
 		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
 		  .elasticX(true)
@@ -1010,14 +1007,11 @@ var   ndx                	= crossfilter(experiments);
           .colorAccessor(function(d, i){return 1;})
           .xAxis().ticks(4).tickFormat(d3.format("s"));
 		  
-   enrollmentChart.width(250).height(140)
+   enrollmentChart.width(250).height(160)
           .dimension(EnrollmentDim)
           .group(EnrollmentGroup)
-		   .data(function(group) {
-			return group.all().filter(function(kv) { return kv.key !=""; });
-			})
-		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
-     	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
+		  .label(function (d) {return d.key + " (" + (d.value / ndx.groupAll().reduceCount().value() * 100).toFixed(0) + "%" + ")";})
+     	  .title(function (d) {return d.key + ": "+d.value+" households";})
 		  .elasticX(true)
           .renderLabel(true)
           .colors(['#EE5859'])
@@ -1042,8 +1036,8 @@ var   ndx                	= crossfilter(experiments);
           .group(disabilityGroup)
           .elasticX(true)
           .renderLabel(true)
-		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
-     	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceCount().value() * 100).toFixed(0) + "%" + ")";})
+     	  .title(function (d) {return d.key + ": "+d.value+" households";})
           .colors(['#86BF88'])
           .colorDomain([0,0])
           .colorAccessor(function(d, i){return 1;})
@@ -1051,7 +1045,7 @@ var   ndx                	= crossfilter(experiments);
 		  
    femaleChart
           .width(250)
-          .height(170)
+          .height(192)
           //.slicesCap(7)
           //.colors(['#ff7373'])
           //.colorDomain([0,0])
@@ -1066,7 +1060,7 @@ var   ndx                	= crossfilter(experiments);
 
    maleChart
           .width(250)
-          .height(170)
+          .height(192)
           //.slicesCap(7)
           //.colors(['#D1D3D4'])
           //.colorDomain([0,0])
@@ -1089,7 +1083,7 @@ var   ndx                	= crossfilter(experiments);
           .ordering(function (p) { return -p.value;})
           .dimension(ShelterDim)
           .group(ShelterGroup)
-		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(0) + "%" + ")";})
+		  .label(function(d){return d.key + " (" + (d.value / ndx.groupAll().reduceSum(function(d) {return d.hh_size}).value() * 100).toFixed(1) + "%" + ")";})
      	  .title(function (d) {return d.key + ": "+d.value+" individuals";})
 		  .colors(['#FFF56D'])
           .colorDomain([0,0])
